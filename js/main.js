@@ -1,12 +1,46 @@
 ;(function () {
+  function getElements() {
+    const ids = {
+      plank: 'plank',
+      hit: 'plankHit',
+      logs: 'logs',
+      weightsLayer: 'weights',
+      leftDisplay: 'left',
+      rightDisplay: 'right',
+      nextDisplay: 'next',
+      tiltDisplay: 'tilt',
+    }
+
+    const elements = {}
+
+    for (const key in ids) {
+      const el = document.getElementById(ids[key])
+      if (!el) {
+        return null
+      }
+      elements[key] = el
+    }
+
+    return elements
+  }
+
   function init() {
-    const plank = document.getElementById('plank')
-    const hit = document.getElementById('plankHit')
-    const logs = document.getElementById('logs')
-    const weightsLayer = document.getElementById('weights')
-    if (!plank || !hit || !logs || !weightsLayer) return
+    const elements = getElements()
+    if (!elements) return
     if (!window.physics || !window.ui) return
 
+    const {
+      plank,
+      hit,
+      logs,
+      weightsLayer,
+      leftDisplay,
+      rightDisplay,
+      nextDisplay,
+      tiltDisplay,
+    } = elements
+
+    const items = []
     let nextWeight = window.physics.randomWeight()
 
     function handleClick(event) {
@@ -28,6 +62,31 @@
         side: drop.side,
         distance: drop.distanceFromCenter,
       })
+
+      items.push({
+        side: drop.side,
+        distance: drop.distanceFromCenter,
+        weight,
+      })
+
+      const state = window.physics.computeState(items)
+
+      window.ui.setPlankAngle(plank, state.angle)
+
+      window.ui.updateStats(
+        {
+          left: leftDisplay,
+          right: rightDisplay,
+          next: nextDisplay,
+          tilt: tiltDisplay,
+        },
+        {
+          left: state.leftWeight,
+          right: state.rightWeight,
+          next: nextWeight,
+          angle: state.angle,
+        }
+      )
     }
 
     hit.addEventListener('click', handleClick)

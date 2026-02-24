@@ -38,9 +38,32 @@
     })
   }
 
+  function setPlankAngle(plank, angle) {
+    if (!plank) return
+    plank.style.transform = 'translateX(-50%) rotate(' + angle + 'deg)'
+  }
+
+  function updateStats(displays, view) {
+    if (!displays) return
+    if (displays.left) {
+      displays.left.textContent = view.left.toFixed(1) + ' kg'
+    }
+    if (displays.right) {
+      displays.right.textContent = view.right.toFixed(1) + ' kg'
+    }
+    if (displays.next) {
+      displays.next.textContent = view.next + ' kg'
+    }
+    if (displays.tilt) {
+      displays.tilt.textContent = view.angle.toFixed(1) + '°'
+    }
+  }
+
   window.ui = {
     appendLog,
     addWeight,
+    setPlankAngle,
+    updateStats,
   }
 })()
 
