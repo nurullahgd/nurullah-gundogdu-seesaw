@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="styles/style.css" />
   </head>
   <body>
+    <script src="js/physics.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
     <main class="app">
       <header class="app-header">
         <h1>Seesaw Simulator</h1>
@@ -36,6 +39,7 @@
             id="plank"
             class="plank"
           >
+            <div id="weights" class="weights"></div>
           </div>
         </div>
       </section>
@@ -43,7 +47,9 @@
         <button id="resetButton" class="btn btn-secondary" type="button">
           Reset
         </button>
+        <div id="logs" class="log-details"></div>
       </section>
     </main>
+
   </body>
 </html>
