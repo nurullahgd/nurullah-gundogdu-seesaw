@@ -10,6 +10,7 @@
       rightDisplay: 'right',
       nextDisplay: 'next',
       tiltDisplay: 'tilt',
+      resetButton: 'resetButton',
     }
 
     const elements = {}
@@ -40,6 +41,7 @@
       rightDisplay,
       nextDisplay,
       tiltDisplay,
+      resetButton,
     } = elements
 
     let items = []
@@ -193,6 +195,35 @@
     hit.addEventListener('click', handleClick)
     hit.addEventListener('mousemove', handleMove)
     hit.addEventListener('mouseleave', handleLeave)
+
+    function handleReset() {
+      items = []
+      nextWeight = window.physics.randomWeight()
+      weightsLayer.innerHTML = ''
+      logs.innerHTML = ''
+      window.ui.hidePreview(weightsLayer)
+      window.ui.setPlankAngle(plank, 0)
+      window.ui.updateStats(
+        {
+          left: leftDisplay,
+          right: rightDisplay,
+          next: nextDisplay,
+          tilt: tiltDisplay,
+        },
+        {
+          left: 0,
+          right: 0,
+          next: nextWeight,
+          angle: 0,
+        }
+      )
+
+      if (window.storage && typeof window.storage.clear === 'function') {
+        window.storage.clear()
+      }
+    }
+
+    resetButton.addEventListener('click', handleReset)
   }
 
   if (document.readyState === 'loading') {
