@@ -27,15 +27,22 @@
     node.textContent = String(payload.weight)
     node.style.left = x + 'px'
 
-    const base = typeof payload.dropOffset === 'number' ? payload.dropOffset : 40
-    const start = -Math.max(40, base)
-    node.style.transform = 'translateX(-50%) translateY(' + start + 'px)'
+    const animate = payload.animate !== false
 
-    layer.appendChild(node)
+    if (animate) {
+      const base =
+        typeof payload.dropOffset === 'number' ? payload.dropOffset : 40
+      const start = -Math.max(40, base)
+      node.style.transform = 'translateX(-50%) translateY(' + start + 'px)'
+      layer.appendChild(node)
 
-    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        node.style.transform = 'translateX(-50%) translateY(0)'
+      })
+    } else {
       node.style.transform = 'translateX(-50%) translateY(0)'
-    })
+      layer.appendChild(node)
+    }
   }
 
   function showPreview(layer, plankRect, payload) {

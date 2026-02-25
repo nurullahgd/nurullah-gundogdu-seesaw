@@ -42,23 +42,82 @@
       tiltDisplay,
     } = elements
 
-    const items = []
+    let items = []
     let nextWeight = window.physics.randomWeight()
 
-    window.ui.updateStats(
-      {
-        left: leftDisplay,
-        right: rightDisplay,
-        next: nextDisplay,
-        tilt: tiltDisplay,
-      },
-      {
-        left: 0,
-        right: 0,
-        next: nextWeight,
-        angle: 0,
+    if (window.storage && typeof window.storage.load === 'function') {
+      const saved = window.storage.load()
+      if (saved && Array.isArray(saved.items) && saved.items.length > 0) {
+        items = saved.items
+        if (
+          typeof saved.nextWeight === 'number' &&
+          saved.nextWeight >= 1 &&
+          saved.nextWeight <= 10
+        ) {
+          nextWeight = saved.nextWeight
+        }
+
+        const rect = plank.getBoundingClientRect()
+        for (let i = 0; i < items.length; i++) {
+          const item = items[i]
+          window.ui.addWeight(weightsLayer, rect, {
+            weight: item.weight,
+            side: item.side,
+            distance: item.distance,
+            animate: false,
+          })
+        }
+
+        const state = window.physics.computeState(items)
+
+        window.ui.setPlankAngle(plank, state.angle)
+
+        window.ui.updateStats(
+          {
+            left: leftDisplay,
+            right: rightDisplay,
+            next: nextDisplay,
+            tilt: tiltDisplay,
+          },
+          {
+            left: state.leftWeight,
+            right: state.rightWeight,
+            next: nextWeight,
+            angle: state.angle,
+          }
+        )
+      } else {
+        window.ui.updateStats(
+          {
+            left: leftDisplay,
+            right: rightDisplay,
+            next: nextDisplay,
+            tilt: tiltDisplay,
+          },
+          {
+            left: 0,
+            right: 0,
+            next: nextWeight,
+            angle: 0,
+          }
+        )
       }
-    )
+    } else {
+      window.ui.updateStats(
+        {
+          left: leftDisplay,
+          right: rightDisplay,
+          next: nextDisplay,
+          tilt: tiltDisplay,
+        },
+        {
+          left: 0,
+          right: 0,
+          next: nextWeight,
+          angle: 0,
+        }
+      )
+    }
 
     function handleClick(event) {
       const rect = plank.getBoundingClientRect()
@@ -107,6 +166,13 @@
       )
 
       window.ui.hidePreview(weightsLayer)
+
+      if (window.storage && typeof window.storage.save === 'function') {
+        window.storage.save({
+          items: items,
+          nextWeight: nextWeight,
+        })
+      }
     }
 
     function handleMove(event) {
