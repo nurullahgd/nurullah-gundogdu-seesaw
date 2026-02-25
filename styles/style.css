@@ -109,7 +109,7 @@ body {
   transform-origin: 50% 50%;
   transform: translateX(-50%) rotate(0deg);
   cursor: pointer;
-  transition: transform 220ms cubic-bezier(0.19, 1, 0.22, 1);
+  transition: transform 0.5s ease-out;
 }
 
 .plank-hit {
@@ -162,6 +162,11 @@ body {
   box-shadow: 0 8px 12px rgba(0, 0, 0, 0.25);
   background: radial-gradient(circle at 30% 20%, #fef3c7 0, #facc15 8%, #eab308 22%, #b45309 90%);
   transition: transform 260ms cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.preview-weight {
+  opacity: 0.7;
+  box-shadow: 0 4px 8px rgba(15, 23, 42, 0.25);
 }
 
 .weight-landed {

@@ -3,6 +3,7 @@
     const ids = {
       plank: 'plank',
       hit: 'plankHit',
+      field: 'field',
       logs: 'logs',
       weightsLayer: 'weights',
       leftDisplay: 'left',
@@ -32,6 +33,7 @@
     const {
       plank,
       hit,
+      field,
       logs,
       weightsLayer,
       leftDisplay,
@@ -60,8 +62,9 @@
 
     function handleClick(event) {
       const rect = plank.getBoundingClientRect()
+      const fieldRect = field.getBoundingClientRect()
       const drop = window.physics.computeDrop(rect, event.clientX)
-      const verticalGap = Math.max(0, rect.top - event.clientY)
+      const dropOffset = rect.top - fieldRect.top
       const weight = nextWeight
       nextWeight = window.physics.randomWeight()
 
@@ -69,7 +72,7 @@
         weight,
         side: drop.side,
         distance: drop.distanceFromCenter,
-        dropOffset: 40 + verticalGap,
+        dropOffset,
       })
 
       window.ui.appendLog(logs, {
@@ -102,9 +105,28 @@
           angle: state.angle,
         }
       )
+
+      window.ui.hidePreview(weightsLayer)
+    }
+
+    function handleMove(event) {
+      const rect = plank.getBoundingClientRect()
+      const drop = window.physics.computeDrop(rect, event.clientX)
+
+      window.ui.showPreview(weightsLayer, rect, {
+        weight: nextWeight,
+        side: drop.side,
+        distance: drop.distanceFromCenter,
+      })
+    }
+
+    function handleLeave() {
+      window.ui.hidePreview(weightsLayer)
     }
 
     hit.addEventListener('click', handleClick)
+    hit.addEventListener('mousemove', handleMove)
+    hit.addEventListener('mouseleave', handleLeave)
   }
 
   if (document.readyState === 'loading') {

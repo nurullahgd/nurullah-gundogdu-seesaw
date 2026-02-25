@@ -38,6 +38,34 @@
     })
   }
 
+  function showPreview(layer, plankRect, payload) {
+    if (!layer) return
+    const centerX = plankRect.width / 2
+    const offset = payload.side === 'left' ? -payload.distance : payload.distance
+    const x = centerX + offset
+
+    let node = layer.querySelector('.preview-weight')
+    if (!node) {
+      node = document.createElement('div')
+      node.className =
+        'weight preview-weight ' +
+        (payload.side === 'left' ? 'weight-left' : 'weight-right')
+      layer.appendChild(node)
+    }
+
+    node.textContent = String(payload.weight)
+    node.style.left = x + 'px'
+    node.style.transform = 'translateX(-50%) translateY(0)'
+  }
+
+  function hidePreview(layer) {
+    if (!layer) return
+    const node = layer.querySelector('.preview-weight')
+    if (node) {
+      node.remove()
+    }
+  }
+
   function setPlankAngle(plank, angle) {
     if (!plank) return
     plank.style.transform = 'translateX(-50%) rotate(' + angle + 'deg)'
@@ -64,6 +92,8 @@
     addWeight,
     setPlankAngle,
     updateStats,
+    showPreview,
+    hidePreview,
   }
 })()
 
