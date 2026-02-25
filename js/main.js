@@ -43,6 +43,21 @@
     const items = []
     let nextWeight = window.physics.randomWeight()
 
+    window.ui.updateStats(
+      {
+        left: leftDisplay,
+        right: rightDisplay,
+        next: nextDisplay,
+        tilt: tiltDisplay,
+      },
+      {
+        left: 0,
+        right: 0,
+        next: nextWeight,
+        angle: 0,
+      }
+    )
+
     function handleClick(event) {
       const rect = plank.getBoundingClientRect()
       const drop = window.physics.computeDrop(rect, event.clientX)
